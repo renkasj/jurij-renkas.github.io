@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jurij Renkas – Korepetycje z języka polskiego</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1410;
+      --red: #c0392b;
+      --gold: #b8860b;
+      --warm-gray: #8a7f74;
+      --light-gray: #e8e2d9;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 79px,
+        rgba(26,20,16,.04) 79px,
+        rgba(26,20,16,.04) 80px
+      );
+      pointer-events: none;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px 80px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp .7s .1s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(48px, 5vw, 78px);
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fadeUp .7s .2s forwards;
+    }
+
+    .hero-title em {
+      color: var(--red);
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--warm-gray);
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp .7s .35s forwards;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--warm-gray);
+      max-width: 420px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp .7s .5s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .7s .65s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background .25s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--red); transform: translateY(-2px); }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background .25s, color .25s, transform .2s;
+    }
+    .btn-secondary:hover { background: var(--ink); color: var(--cream); transform: translateY(-2px); }
+
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-visual {
+      width: 100%;
+      height: 100%;
+      background: var(--ink);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeIn .9s .3s forwards;
+    }
+
+    /* decorative Polish eagle-inspired geometry */
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border: 1px solid rgba(245,240,232,.1);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border: 1px solid rgba(192,57,43,.25);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .hero-monogram {
+      font-family: 'Playfair Display', serif;
+      font-size: 120px;
+      font-weight: 700;
+      color: rgba(245,240,232,.07);
+      position: absolute;
+      user-select: none;
+      letter-spacing: -4px;
+    }
+
+    .hero-flag {
+      display: flex;
+      flex-direction: column;
+      width: 180px;
+      height: 110px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .flag-white { flex: 1; background: #fff; }
+    .flag-red   { flex: 1; background: var(--red); }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 48px;
+      right: 48px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1px solid rgba(245,240,232,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+    .hero-badge span {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(245,240,232,.5);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 80px;
+      background: rgba(245,240,232,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo em { color: var(--red); font-style: italic; }
+
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--red); }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 120px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      border-top: 1px solid var(--light-gray);
+    }
+
+    .about-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .about h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+
+    .about p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--warm-gray);
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--light-gray);
+      border: 1px solid var(--light-gray);
+    }
+
+    .stat {
+      background: var(--cream);
+      padding: 36px 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: .08em;
+      color: var(--warm-gray);
+      text-transform: uppercase;
+    }
+
+    /* ── OFFER ── */
+    .offer {
+      padding: 100px 80px;
+      background: var(--ink);
+      color: var(--cream);
+    }
+
+    .offer-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .offer-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .offer h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+      color: var(--cream);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .card {
+      background: rgba(245,240,232,.04);
+      border: 1px solid rgba(245,240,232,.08);
+      padding: 48px 36px;
+      transition: background .3s, transform .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--red);
+      transition: height .4s;
+    }
+    .card:hover { background: rgba(245,240,232,.07); transform: translateY(-4px); }
+    .card:hover::before { height: 100%; }
+
+    .card-icon {
+      font-size: 36px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245,240,232,.6);
+    }
+
+    /* ── LEVELS ── */
+    .levels {
+      padding: 100px 80px;
+    }
+
+    .levels-header {
+      margin-bottom: 64px;
+    }
+
+    .level-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .levels h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      background: var(--light-gray);
+    }
+
+    .level-item {
+      background: var(--cream);
+      padding: 32px 20px;
+      text-align: center;
+      transition: background .25s;
+      cursor: default;
+    }
+    .level-item:hover { background: var(--ink); }
+    .level-item:hover .level-code,
+    .level-item:hover .level-name { color: var(--cream); }
+
+    .level-code {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      transition: color .25s;
+    }
+    .level-code span { color: var(--red); }
+
+    .level-name {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      transition: color .25s;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      padding: 100px 80px;
+      background: var(--light-gray);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .contact-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .contact h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.5vw, 52px);
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .contact p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--warm-gray);
+      margin-bottom: 36px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 400;
+      padding: 16px 20px;
+      background: var(--cream);
+      border: 1px solid transparent;
+      transition: border-color .25s, transform .2s;
+    }
+    .contact-link:hover { border-color: var(--ink); transform: translateX(6px); }
+
+    .contact-link-icon { font-size: 20px; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 80px;
+      background: var(--ink);
+      color: rgba(245,240,232,.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      letter-spacing: .06em;
+    }
+
+    footer a { color: rgba(245,240,232,.4); text-decoration: none; }
+    footer a:hover { color: var(--cream); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 120px 28px 80px; }
+
+      .about, .contact { grid-template-columns: 1fr; padding: 80px 28px; gap: 40px; }
+      .offer, .levels { padding: 80px 28px; }
+
+      .cards { grid-template-columns: 1fr; }
+      .level-grid { grid-template-columns: repeat(3, 1fr); }
+      .stats { grid-template-columns: 1fr; }
+
+      footer { flex-direction: column; gap: 12px; padding: 32px 24px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Dr Jurij <em>Renkas</em></a>
+    <ul class="nav-links">
+      <li><a href="#o-mnie">O mnie</a></li>
+      <li><a href="#oferta">Oferta</a></li>
+      <li><a href="#poziomy">Poziomy</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Korepetycje z języka polskiego</p>
+      <h1 class="hero-title">Dr Jurij<br><em>Renkas</em></h1>
+      <p class="hero-subtitle">Lektor języka polskiego · Stopień naukowy doktora</p>
+      <p class="hero-desc">
+        Profesjonalne korepetycje z języka polskiego dla wszystkich poziomów zaawansowania — 
+        od podstaw po poziom zaawansowany. Nauka w przyjaznej atmosferze, 
+        dopasowana do Twoich potrzeb i celów.
+      </p>
+      <div class="hero-cta">
+        <a href="#kontakt" class="btn-primary">Umów lekcję</a>
+        <a href="#oferta" class="btn-secondary">Zobacz ofertę</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual">
+        <div class="hero-monogram">JR</div>
+        <div class="hero-flag">
+          <div class="flag-white"></div>
+          <div class="flag-red"></div>
+        </div>
+        <div class="hero-badge">
+          <span>język<br>polski</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="o-mnie">
+    <div>
+      <p class="about-label">O mnie</p>
+      <h2>Pasja do języka i nauczania</h2>
+      <p>
+        Jestem doktorem i doświadczonym lektorem języka polskiego 
+        z wieloletnią praktyką dydaktyczną. Moje lekcje są prowadzone w sposób efektywny, 
+        angażujący i dostosowany do indywidualnych potrzeb każdego ucznia — od dzieci i młodzieży po dorosłych.
+      </p>
+      <p>
+        Specjalizuję się zarówno w nauce języka polskiego jako obcego (dla cudzoziemców), 
+        jak i w korepetycjach dla uczniów szkół podstawowych, studentów oraz dorosłych. 
+        Przygotowuję do egzaminu ósmoklasisty, egzaminów certyfikowanych państwowych 
+        oraz międzynarodowego egzaminu TELC.
+      </p>
+      <p>
+        Lekcje prowadzę <strong>wyłącznie online</strong> w elastycznych terminach 
+        dostosowanych do harmonogramu ucznia. Cena za lekcję: <strong>35 zł</strong>.
+      </p>
+    </div>
+    <div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">Dr</div>
+          <div class="stat-label">stopień naukowy</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">35</div>
+          <div class="stat-label">zł / lekcja</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">🌐</div>
+          <div class="stat-label">100% Online</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFER -->
+  <section class="offer" id="oferta">
+    <div class="offer-header">
+      <p class="offer-label">Oferta</p>
+      <h2>Co oferuję?</h2>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">🇵🇱</span>
+        <h3>Polski dla cudzoziemców</h3>
+        <p>Nauka języka polskiego od podstaw dla obcokrajowców. Konwersacje, gramatyka, słownictwo — 
+        w przyjaznej i skutecznej formie. Poziomy A1–C2.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📚</span>
+        <h3>Korepetycje szkolne</h3>
+        <p>Pomoc w nauce języka polskiego dla uczniów szkół podstawowych i liceów. 
+        Kompleksowe przygotowanie do egzaminu ósmoklasisty i matury.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎓</span>
+        <h3>Egzaminy certyfikowane</h3>
+        <p>Przygotowanie do państwowych egzaminów certyfikacyjnych oraz międzynarodowego 
+        egzaminu <strong style="color:rgba(245,240,232,.85)">TELC</strong> z języka polskiego.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEVELS -->
+  <section class="levels" id="poziomy">
+    <div class="levels-header">
+      <p class="level-label">Poziomy nauczania</p>
+      <h2>Prowadzę zajęcia na wszystkich poziomach</h2>
+    </div>
+    <div class="level-grid">
+      <div class="level-item">
+        <div class="level-code"><span>A</span>1</div>
+        <div class="level-name">Początkujący</div>
+      </div>
+      <div class="level-item">
+        <div class="level-code"><span>A</span>2</div>
+        <div class="level-name">Podstawowy</div>
+      </div>
+      <div class="level-item">
+        <div class="level-code"><span>B</span>1</div>
+        <div class="level-name">Średniozaawansowany</div>
+      </div>
+      <div class="level-item">
+        <div class="level-code"><span>B</span>2</div>
+        <div class="level-name">Wyższy średni</div>
+      </div>
+      <div class="level-item">
+        <div class="level-code"><span>C</span>1</div>
+        <div class="level-name">Zaawansowany</div>
+      </div>
+      <div class="level-item">
+        <div class="level-code"><span>C</span>2</div>
+        <div class="level-name">Biegły</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="kontakt">
+    <div>
+      <p class="contact-label">Kontakt</p>
+      <h2>Zacznijmy współpracę</h2>
+      <p>
+        Masz pytania lub chcesz umówić się na pierwszą lekcję? 
+        Skontaktuj się ze mną — chętnie omówię szczegóły i dobiorę program 
+        odpowiedni dla Ciebie.
+      </p>
+      <div class="contact-links">
+        <a href="https://korepetycje.pl" class="contact-link" target="_blank">
+          <span class="contact-link-icon">🔗</span>
+          <span>Profil na korepetycje.pl</span>
+        </a>
+        <a href="mailto:renkasj@gmail.com" class="contact-link">
+          <span class="contact-link-icon">✉️</span>
+          <span>renkasj@gmail.com</span>
+        </a>
+      </div>
+    </div>
+    <div style="background: var(--cream); padding: 48px; border: 1px solid var(--light-gray);">
+      <p style="font-family:'Playfair Display',serif; font-size:22px; margin-bottom:20px; font-style:italic; color:var(--ink);">
+        „Nauka języka to inwestycja, która procentuje przez całe życie."
+      </p>
+      <p style="font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--warm-gray);">
+        — Jurij Renkas
+      </p>
+      <hr style="margin: 28px 0; border: none; border-top: 1px solid var(--light-gray);" />
+      <p style="font-size:14px; font-weight:300; color:var(--warm-gray); line-height:1.8;">
+        Pierwsza lekcja próbna pozwoli nam razem ocenić Twój poziom 
+        i ustalić najlepszy plan nauki.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 Dr Jurij Renkas — Korepetycje z języka polskiego</span>
+    <span>
+      <a href="https://korepetycje.pl" target="_blank">korepetycje.pl</a>
+    </span>
+  </footer>
+
+</body>
+</html>

@@ -154,82 +154,21 @@
     .hero-visual {
       width: 100%;
       height: 100%;
-      background: var(--ink);
+      background: #fdf6ec;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
       opacity: 0;
       animation: fadeIn .9s .3s forwards;
     }
 
-    /* decorative Polish eagle-inspired geometry */
-    .hero-visual::before {
-      content: '';
+    .hero-canvas {
       position: absolute;
-      width: 340px;
-      height: 340px;
-      border: 1px solid rgba(245,240,232,.1);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-    }
-    .hero-visual::after {
-      content: '';
-      position: absolute;
-      width: 240px;
-      height: 240px;
-      border: 1px solid rgba(192,57,43,.25);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-    }
-
-    .hero-monogram {
-      font-family: 'Playfair Display', serif;
-      font-size: 120px;
-      font-weight: 700;
-      color: rgba(245,240,232,.07);
-      position: absolute;
-      user-select: none;
-      letter-spacing: -4px;
-    }
-
-    .hero-flag {
-      display: flex;
-      flex-direction: column;
-      width: 180px;
-      height: 110px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5);
-      position: relative;
-      z-index: 2;
-      overflow: hidden;
-    }
-    .flag-white { flex: 1; background: #fff; }
-    .flag-red   { flex: 1; background: var(--red); }
-
-    .hero-badge {
-      position: absolute;
-      bottom: 48px;
-      right: 48px;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 1px solid rgba(245,240,232,.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3;
-    }
-    .hero-badge span {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 13px;
-      color: rgba(245,240,232,.5);
-      text-align: center;
-      line-height: 1.4;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
     /* ── NAV ── */
@@ -596,14 +535,7 @@
     </div>
     <div class="hero-right">
       <div class="hero-visual">
-        <div class="hero-monogram">JR</div>
-        <div class="hero-flag">
-          <div class="flag-white"></div>
-          <div class="flag-red"></div>
-        </div>
-        <div class="hero-badge">
-          <span>język<br>polski</span>
-        </div>
+        <canvas class="hero-canvas" id="polishCanvas"></canvas>
       </div>
     </div>
   </section>
@@ -753,5 +685,260 @@
     </span>
   </footer>
 
+<script>
+(function() {
+  const canvas = document.getElementById('polishCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const W = () => canvas.width;
+  const H = () => canvas.height;
+
+  // ── Waving flag ──
+  const FLAG_W = 210, FLAG_H = 130;
+
+  function drawFlag(cx, cy, t) {
+    const w = FLAG_W, h = FLAG_H;
+    const segments = 40;
+    const segW = w / segments;
+    const amplitude = 9;
+    const freq = 2.2;
+    const speed = 1.5;
+
+    ctx.save();
+    ctx.translate(cx - w / 2, cy - h / 2);
+
+    ctx.shadowColor = 'rgba(180,120,80,0.25)';
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 10;
+
+    for (let half = 0; half < 2; half++) {
+      ctx.beginPath();
+      for (let i = 0; i <= segments; i++) {
+        const x = i * segW;
+        const wave = amplitude * Math.sin(freq * (i / segments) * Math.PI * 2 - t * speed) * (i / segments);
+        const y = half === 0 ? wave : h / 2 + wave;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      for (let i = segments; i >= 0; i--) {
+        const x = i * segW;
+        const wave = amplitude * Math.sin(freq * (i / segments) * Math.PI * 2 - t * speed) * (i / segments);
+        const y = half === 0 ? h / 2 + wave : h + wave;
+        ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = half === 0 ? '#ffffff' : '#c0392b';
+      ctx.fill();
+
+      const grad = ctx.createLinearGradient(0, half * h / 2, 0, (half + 1) * h / 2);
+      grad.addColorStop(0, 'rgba(255,255,255,0.12)');
+      grad.addColorStop(0.5, 'rgba(0,0,0,0.04)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.10)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // border
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const x = i * segW;
+      const wave = amplitude * Math.sin(freq * (i / segments) * Math.PI * 2 - t * speed) * (i / segments);
+      i === 0 ? ctx.moveTo(x, wave) : ctx.lineTo(x, wave);
+    }
+    for (let i = segments; i >= 0; i--) {
+      const x = i * segW;
+      const wave = amplitude * Math.sin(freq * (i / segments) * Math.PI * 2 - t * speed) * (i / segments);
+      ctx.lineTo(x, h + wave);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(160,100,60,0.2)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // pole
+    ctx.save();
+    ctx.translate(cx - FLAG_W / 2, cy - FLAG_H / 2);
+    const poleGrad = ctx.createLinearGradient(-6, 0, 0, 0);
+    poleGrad.addColorStop(0, '#c8922a');
+    poleGrad.addColorStop(0.4, '#f5d060');
+    poleGrad.addColorStop(1, '#9a6e10');
+    ctx.fillStyle = poleGrad;
+    ctx.fillRect(-7, -28, 7, FLAG_H + 48);
+    ctx.beginPath();
+    ctx.arc(-3.5, -30, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#f5d060';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ── Decorative folk-art circles ──
+  function drawFolkRings(cx, cy, t) {
+    const rings = [
+      { r: 195, color: 'rgba(192,57,43,0.12)', dash: [4, 10], width: 1.5 },
+      { r: 165, color: 'rgba(192,57,43,0.07)', dash: [], width: 0.8 },
+      { r: 230, color: 'rgba(180,120,60,0.08)', dash: [2, 14], width: 1 },
+    ];
+    rings.forEach(({ r, color, dash, width }) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 0.05);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.setLineDash(dash);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  // ── Folk flowers (wycinanki style) ──
+  function drawFlower(cx, cy, r, color, alpha, t, rotOffset) {
+    const petals = 6;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotOffset + t * 0.3);
+    ctx.globalAlpha = alpha;
+    for (let i = 0; i < petals; i++) {
+      ctx.save();
+      ctx.rotate((i / petals) * Math.PI * 2);
+      ctx.beginPath();
+      ctx.ellipse(0, -r * 0.6, r * 0.28, r * 0.55, 0, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, r * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = color === '#c0392b' ? '#f5d060' : '#c0392b';
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // ── Corner folk ornaments ──
+  function drawCornerLeaf(x, y, angle, t) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle + Math.sin(t * 0.5) * 0.04);
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(10, -18, 26, -20, 30, -8);
+    ctx.bezierCurveTo(26, 4, 10, 2, 0, 0);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // ── Floating dots ──
+  const DOTS = Array.from({ length: 22 }, (_, i) => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: 2 + Math.random() * 3,
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.18 + Math.random() * 0.25,
+    color: i % 3 === 0 ? '#c0392b' : i % 3 === 1 ? '#b8860b' : '#d4a9c0',
+    opacity: 0.2 + Math.random() * 0.35,
+  }));
+
+  function drawDots(t) {
+    DOTS.forEach(p => {
+      const x = ((p.x + Math.sin(p.phase + t * 0.4) * 0.04 + 1) % 1) * W();
+      const y = ((p.y - p.speed * t * 0.002 + 2) % 1) * H();
+      ctx.beginPath();
+      ctx.arc(x, y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.opacity;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  // ── Subtle text label ──
+  function drawLabel(cx, cy) {
+    ctx.save();
+    ctx.font = "italic 16px 'Playfair Display', serif";
+    ctx.fillStyle = 'rgba(120,60,40,0.45)';
+    ctx.textAlign = 'center';
+    ctx.fillText('język polski', cx, cy + FLAG_H / 2 + 52);
+    ctx.restore();
+  }
+
+  // ── Background gradient ──
+  function drawBg() {
+    const grad = ctx.createRadialGradient(W()/2, H()/2, 60, W()/2, H()/2, W() * 0.85);
+    grad.addColorStop(0, '#fdf6ec');
+    grad.addColorStop(0.5, '#f8ecd8');
+    grad.addColorStop(1, '#f0dcc0');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W(), H());
+  }
+
+  // ── Subtle paper texture lines ──
+  function drawTexture() {
+    ctx.save();
+    ctx.globalAlpha = 0.025;
+    ctx.strokeStyle = '#8a5030';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < H(); y += 14) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W(), y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  let start = null;
+  function loop(ts) {
+    if (!start) start = ts;
+    const t = (ts - start) / 1000;
+
+    ctx.clearRect(0, 0, W(), H());
+
+    drawBg();
+    drawTexture();
+
+    const cx = W() / 2, cy = H() / 2 - 10;
+
+    drawDots(t);
+    drawFolkRings(cx, cy, t);
+
+    // folk flowers at corners
+    drawFlower(cx - 170, cy - 130, 28, '#c0392b', 0.22, t, 0);
+    drawFlower(cx + 170, cy - 130, 24, '#b8860b', 0.18, t, 1.2);
+    drawFlower(cx - 160, cy + 140, 22, '#c0392b', 0.16, t, 2.4);
+    drawFlower(cx + 160, cy + 130, 26, '#9b2035', 0.20, t, 0.8);
+
+    // small accent flowers
+    drawFlower(cx - 210, cy + 10, 14, '#b8860b', 0.14, t, 1.5);
+    drawFlower(cx + 210, cy - 20, 14, '#c0392b', 0.14, t, 2.1);
+
+    // corner leaves
+    [[30, 30, 0], [W()-30, 30, Math.PI/2], [30, H()-30, -Math.PI/2], [W()-30, H()-30, Math.PI]].forEach(([x, y, a]) => {
+      drawCornerLeaf(x, y, a, t);
+    });
+
+    drawFlag(cx, cy, t);
+    drawLabel(cx, cy);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>
